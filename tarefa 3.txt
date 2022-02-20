@@ -1,0 +1,125 @@
+###################### TAREFA 3 ###########################
+
+# Iremos coletar os dados referentes a notas e datas de lançamento
+# de álbuns e filmes no site rateyourmusic.com, uma das maiores
+# bases de dedos colaborativas de música e filmes do mundo
+###################### TAREFA 3 ###########################
+
+# Iremos coletar os dados referentes a notas e datas de lançamento
+# de álbuns e filmes no site rateyourmusic.com, uma das maiores
+# bases de dedos colaborativas de música e filmes do mundo
+
+
+##################### ÁLBUNS ##############################
+
+
+library(rvest)
+library(dplyr)
+
+
+base_url = "https://rateyourmusic.com/charts/top/album/1970-2019"
+
+charts = read_html(base_url)
+
+## Raspando dados de datas de lançamento, notas e número de resenhas
+
+rym_date =
+  charts %>%
+  html_elements(".topcharts_item_releasedate")
+
+rym_date = html_text(rym_date)
+head(rym_date, 20)
+
+rym_date = lubridate::dmy(rym_date)
+
+class(rym_date)
+head(rym_date)
+
+rym_stat =
+  charts %>%
+  html_elements(".topcharts_avg_rating_stat")
+
+rym_stat = html_text(rym_stat)
+head(rym_stat, 20)
+
+rym_reviews =
+  charts %>%
+  html_elements(".topcharts_reviews_stat")
+
+rym_reviews = html_text(rym_reviews)
+head(rym_reviews, 20)
+
+rym_genre =
+  charts %>%
+  html_elements(".topcharts_item_genres_container")
+
+rym_genre = html_text(rym_genre)
+head(rym_genre, 20)
+class(rym_genre)
+
+
+## Criando o dataframe
+
+rym_df = data.frame(rym_date, rym_stat, rym_reviews, rym_genre)
+View(rym_df)
+
+
+## Plotando gráfico
+
+library(ggplot2)
+
+ggplot(rym_df, aes(x = rym_date, y = rym_stat)) +
+  geom_point() +
+  labs(x = "Ano", y = "Nota RYM", tittle = "Ano e nota dos 40
+       melhores álbuns, de acordo com RYM")
+
+
+
+################# FILMES #######################
+
+
+base_url_2 = "https://rateyourmusic.com/charts/top/film/all-time/"
+
+charts_2 = read_html(base_url_2)
+
+
+## Raspando dados de datas de lançamento, notas e número de resenhas
+
+rym_date_2 =
+  charts_2 %>%
+  html_elements(".topcharts_item_releasedate")
+
+rym_date_2 = html_text(rym_date_2)
+head(rym_date_2, 20)
+
+rym_date_2 = lubridate::dmy(rym_date_2)
+
+class(rym_date_2)
+head(rym_date_2)
+
+rym_stat_2 =
+  charts_2 %>%
+  html_elements(".topcharts_avg_rating_stat")
+
+rym_stat_2 = html_text(rym_stat_2)
+head(rym_stat, 20)
+
+
+## Criando o dataframe
+
+rym_df_2 = data.frame(rym_date_2, rym_stat_2)
+View(rym_df_2)
+
+
+## Plotando gráfico
+
+library(ggplot2)
+
+ggplot(rym_df_2, aes(x = rym_date_2, y = rym_stat_2)) +
+  geom_point() +
+  labs(x = "Ano", y = "Nota RYM", tittle = "Ano e nota dos 40
+       melhores filmes, de acordo com RYM")
+
+
+##############################################################
+##############################################################
